@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect, request
 
 from app import app
 import mysql.connector
@@ -37,6 +37,21 @@ def answer(id):
     html = render_template('answer.html',answer=answer[0])
 
     return html
+
+@app.route('/input_register')
+def input_register():
+    html = render_template('input_register.html')
+
+    return html
+
+@app.route('/register', methods=["POST"])
+def register():
+    question = str(request.form.get('question'))
+    answer = str(request.form.get('answer'))
+
+    db.insert("INSERT INTO `quize` (`question`, `answer`) VALUES ('{question}', '{answer}');".format(question=question, answer=answer))
+
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8888, threaded=True) 

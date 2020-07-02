@@ -23,3 +23,10 @@ class MySQL:
         cursor.close()
         self._close()
         return data
+
+    def insert(self, stmt):
+        self._open()
+        cursor = self.dbh.cursor()
+        cursor.execute(stmt)
+        self.dbh.commit()
+        self._close()

@@ -1,2 +1,4 @@
 # web-app-assignment
-Web application for assignment of jn_lecture.
+webアプリの課題
+
+問題登録、問題表示の機能があります。

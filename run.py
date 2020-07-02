@@ -1,11 +1,42 @@
-from flask import Flask, jsonify
+from flask import render_template
 
-app = Flask(__name__)
+from app import app
+import mysql.connector
+from quiz_app.database import MySQL
 
+
+config={'user':'root', 'host':'localhost', 'password':'Sivuch1144', 'database':'jn_lecture'}
+db = MySQL(**config)
 
 @app.route('/')
-def heelo_world():
-    return "Hello, World"
+def index():
+    html = render_template('index.html')
 
-if __name__ == "__main__":
-    app.run(debug=True, port=8000, threaded=True) 
+    return html
+
+@app.route('/quizes')
+def quizes():
+    stmt = 'SELECT * FROM quize'
+    quizes = db.query(stmt)
+    html = render_template('quizes.html', quizes=quizes)
+
+    return html
+
+@app.route('/quizes/<int:id>')
+def quize(id):
+    stmt = 'SELECT * FROM quize WHERE id = ?'
+    quize = db.query(stmt, id, prepared=True)
+    html = render_template('quize.html',quize=quize[0])
+
+    return html
+
+@app.route('/answer/<int:id>')
+def answer(id):
+    stmt = 'SELECT * FROM quize WHERE id = ?'
+    answer = db.query(stmt, id, prepared=True)
+    html = render_template('answer.html',answer=answer[0])
+
+    return html
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8888, threaded=True) 
